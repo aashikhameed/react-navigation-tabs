@@ -12,6 +12,8 @@ type InjectedProps = {
   isLandscape: boolean;
 };
 
+let eventSubs: any = null;
+
 export const isOrientationLandscape = ({ width, height }: DimensionsType) =>
   width > height;
 
@@ -32,11 +34,11 @@ export default function withDimensions<Props extends InjectedProps>(
     }
 
     componentDidMount() {
-      Dimensions.addEventListener('change', this.handleOrientationChange);
+      eventSubs = Dimensions.addEventListener('change', this.handleOrientationChange);
     }
 
     componentWillUnmount() {
-      Dimensions.removeEventListener('change', this.handleOrientationChange);
+      eventSubs && eventSubs.remove()
     }
 
     handleOrientationChange = ({ window }: { window: ScaledSize }) => {

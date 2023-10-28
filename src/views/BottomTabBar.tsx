@@ -82,6 +82,9 @@ class TouchableWithoutFeedbackWrapper extends React.Component<
   }
 }
 
+let keyEveShow: any = null;
+let keyEveHide: any = null;
+
 class TabBarBottom extends React.Component<BottomTabBarProps, State> {
   static defaultProps = {
     keyboardHidesTabBar: true,
@@ -116,22 +119,17 @@ class TabBarBottom extends React.Component<BottomTabBarProps, State> {
 
   componentDidMount() {
     if (Platform.OS === 'ios') {
-      Keyboard.addListener('keyboardWillShow', this._handleKeyboardShow);
-      Keyboard.addListener('keyboardWillHide', this._handleKeyboardHide);
+      keyEveShow = Keyboard.addListener('keyboardWillShow', this._handleKeyboardShow);
+      keyEveHide = Keyboard.addListener('keyboardWillHide', this._handleKeyboardHide);
     } else {
-      Keyboard.addListener('keyboardDidShow', this._handleKeyboardShow);
-      Keyboard.addListener('keyboardDidHide', this._handleKeyboardHide);
+      keyEveShow = Keyboard.addListener('keyboardDidShow', this._handleKeyboardShow);
+      keyEveHide = Keyboard.addListener('keyboardDidHide', this._handleKeyboardHide);
     }
   }
 
   componentWillUnmount() {
-    if (Platform.OS === 'ios') {
-      Keyboard.removeListener('keyboardWillShow', this._handleKeyboardShow);
-      Keyboard.removeListener('keyboardWillHide', this._handleKeyboardHide);
-    } else {
-      Keyboard.removeListener('keyboardDidShow', this._handleKeyboardShow);
-      Keyboard.removeListener('keyboardDidHide', this._handleKeyboardHide);
-    }
+    keyEveShow && keyEveShow.remove();
+    keyEveHide && keyEveHide.remove();
   }
 
   // @ts-ignore
